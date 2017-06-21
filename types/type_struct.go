@@ -23,7 +23,7 @@ func (t typeStruct) Type() string {
 	return t.typeName
 }
 
-func (t *typeStruct) SetTag(tag Tag) error {
+func (t *typeStruct) SetValidateTag(tag Tag) error {
 	switch tag.Key() {
 	case StructFuncKey:
 		for _, v := range parseFuncsParam(tag.(SimpleTag).Param) {
@@ -36,7 +36,16 @@ func (t *typeStruct) SetTag(tag Tag) error {
 }
 
 func (t typeStruct) Generate(w io.Writer, cfg GenConfig, name Name) {
-	registerError := "	errs.AddField(%s, err)\n"
+	registerError := `
+				switch e := err.(type) {
+				case errlist.List:
+				  for _, childErr := range e {
+				    errs.AddField(%[1]s + "." + childErr.Field, childErr.Err)
+				  }
+				case error:
+				  errs.AddField(%[1]s, err)
+				}
+				`
 	if !cfg.SeveralErrors {
 		cfg.AddImport("fmt")
 		registerError = "	return fmt.Errorf(\"%%s %%v\", %s, err)\n"

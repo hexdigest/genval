@@ -21,7 +21,7 @@ func (t typeArray) Type() string {
 	return Array
 }
 
-func (t *typeArray) SetTag(tag Tag) error {
+func (t *typeArray) SetValidateTag(tag Tag) error {
 	switch tag.Key() {
 	case ArrayMinItemsKey:
 		st := tag.(SimpleTag)
@@ -32,7 +32,7 @@ func (t *typeArray) SetTag(tag Tag) error {
 	case ArrayItemKey:
 		scope := tag.(ScopeTag)
 		for _, it := range scope.InnerTags {
-			if err := t.innerType.SetTag(it); err != nil {
+			if err := t.innerType.SetValidateTag(it); err != nil {
 				return fmt.Errorf("set item tags failed for %+v, err: %s", it, err)
 			}
 		}

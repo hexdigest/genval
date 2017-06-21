@@ -15,7 +15,7 @@ func (t typeBool) Type() string {
 	return Bool
 }
 
-func (t *typeBool) SetTag(tag Tag) error {
+func (t *typeBool) SetValidateTag(tag Tag) error {
 	return ErrUnusedTag
 }
 

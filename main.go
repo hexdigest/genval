@@ -9,6 +9,7 @@ import (
 	"flag"
 	"log"
 	"os"
+	"strings"
 )
 
 const (
@@ -16,6 +17,7 @@ const (
 )
 
 var (
+	supportedTags        = flag.String("tags", "", "supported tags as source for field naming")
 	outputFile           = flag.String("outputFile", "validators.go", "output file name")
 	dir                  = flag.String("d", "", "directory with files to be validated")
 	pkg                  = flag.String("p", "", "package with files to be validated")
@@ -39,7 +41,19 @@ func main() {
 		d, p = args[0], args[0]
 	}
 
+	supportedTagsSlice := strings.Split(*supportedTags, ",")
+	if len(supportedTagsSlice) >= 1 {
+		if supportedTagsSlice[0] != "" {
+			supportedTagsSlice = append([]string{""}, supportedTagsSlice...)
+		}
+	}
+	// supportedTags[0] = "" always to generate default validator.
+	for i, tag := range supportedTagsSlice {
+		supportedTagsSlice[i] = strings.ToUpper(tag)
+	}
+
 	cfg := config{
+		supportedTags:    supportedTagsSlice,
 		dir:              d,
 		pkg:              p,
 		outputFile:       *outputFile,

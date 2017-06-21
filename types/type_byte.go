@@ -15,7 +15,7 @@ func (t typeByte) Type() string {
 	return Byte
 }
 
-func (t *typeByte) SetTag(tag Tag) error {
+func (t *typeByte) SetValidateTag(tag Tag) error {
 	return ErrUnusedTag
 }
 

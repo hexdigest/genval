@@ -10,7 +10,7 @@ import (
 
 type TypeDef interface {
 	Type() string
-	SetTag(Tag) error
+	SetValidateTag(Tag) error
 	Validate() error
 	Generate(w io.Writer, cfg GenConfig, name Name)
 }
@@ -20,6 +20,7 @@ var ErrUnusedTag = errors.New("unused tag")
 type GenConfig struct {
 	NeedValidatableCheck bool
 	SeveralErrors        bool
+	SupportedTags        []string
 	AddImport            func(string)
 }
 
@@ -28,6 +29,7 @@ type Name struct {
 	pointerPrefix string
 	structVar     string
 	fieldName     string
+	originalName  string
 	labelName     string
 }
 
@@ -54,11 +56,11 @@ func (n Name) LabelName() string {
 	return n.labelName
 }
 
-func NewName(pointerPrefix, structVar, fieldName string) Name {
+func NewName(pointerPrefix, structVar, fieldName, originalName string) Name {
 	return Name{
 		pointerPrefix: pointerPrefix,
 		structVar:     structVar,
-		fieldName:     fieldName,
+		fieldName:     originalName,
 		labelName:     fmt.Sprintf("%q", fieldName),
 	}
 }

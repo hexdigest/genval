@@ -13,7 +13,7 @@ func (t typeFunc) Type() string {
 	return "func"
 }
 
-func (t *typeFunc) SetTag(tag Tag) error {
+func (t *typeFunc) SetValidateTag(tag Tag) error {
 	return ErrUnusedTag
 }
 

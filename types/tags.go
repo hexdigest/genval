@@ -10,6 +10,16 @@ type Tag interface {
 	Key() string
 }
 
+type NameTags map[string]string
+
+func (n NameTags) Get(name string) string {
+	res, ok := n[strings.ToLower(name)]
+	if !ok {
+		return n[""]
+	}
+	return res
+}
+
 type SimpleTag struct {
 	Name  string
 	Param string
@@ -28,17 +38,18 @@ func (t ScopeTag) Key() string {
 	return t.Name
 }
 
-func ParseTags(astTag *ast.BasicLit, logCtx string) []Tag { //example: `json:"place_type,omitempty" validate:"min=1,max=64"` OR `json:"user_id"`
+func ParseTags(astTag *ast.BasicLit, logCtx string) ([]Tag, NameTags) { //example: `json:"place_type,omitempty" validate:"min=1,max=64"` OR `json:"user_id"`
 	if astTag == nil {
-		return nil
+		return nil, nil
 	}
 	tagString := astTag.Value
 	if tagString == "" {
-		return nil
+		return nil, nil
 	}
 	tagString = removeQuotes(tagString) //clean from `json:"place_type,omitempty" validate:"min=1,max=64"` to  json:"place_type,omitempty" validate:"min=1,max=64"
 	splittedTags := strings.Split(tagString, " ")
-
+	validateTags := []Tag{}
+	nameTags := map[string]string{}
 	for _, tagWithName := range splittedTags {
 		if tagWithName == "" {
 			continue
@@ -49,15 +60,17 @@ func ParseTags(astTag *ast.BasicLit, logCtx string) []Tag { //example: `json:"pl
 		}
 		tagName := strings.Trim(v[0], " ")
 		if tagName == ValidateTag {
-			return parseFuncs(removeQuotes(v[1]), logCtx) //clean quotes from "min=1,max=64" to min=1,max=64
+			validateTags = parseFuncs(removeQuotes(v[1]), logCtx) //clean quotes from "min=1,max=64" to min=1,max=64
+			continue
 		}
 		for _, m := range misspellValidate {
 			if m == tagName {
 				log.Fatalf("tag validate is misspelled for %s: %s", logCtx, tagName)
 			}
 		}
+		nameTags[tagName] = removeQuotes(strings.TrimSpace(v[1]))
 	}
-	return nil
+	return validateTags, nameTags
 }
 
 func scopeWasParsedRight(tagFunc string) bool {
