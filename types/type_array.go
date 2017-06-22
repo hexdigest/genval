@@ -58,6 +58,8 @@ func (t typeArray) Generate(w io.Writer, cfg GenConfig, name Name) {
 
 	if needGenerate(t.innerType) || validMaxMin(t.max, t.min) {
 		fmt.Fprintf(w, "for i, x := range %s {\n", name.Full())
+		fmt.Fprintf(w, "	_ = i \n")
+		fmt.Fprintf(w, "	_ = x \n")
 		cfg.AddImport("fmt")
 		t.innerType.Generate(w, cfg, NewIndexedName(name.labelName[1:len(name.labelName)-1], "i", "x", name.tagName))
 		fmt.Fprintf(w, "}\n")

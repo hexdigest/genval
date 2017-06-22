@@ -63,7 +63,7 @@ func NewName(pointerPrefix, structVar, labelName, fieldName, tagName string) Nam
 		structVar:     structVar,
 		fieldName:     fieldName,
 		labelName:     fmt.Sprintf("%q", labelName),
-		tagName: tagName,
+		tagName:       tagName,
 	}
 }
 func NewSimpleName(labelName, fieldName string) Name {
@@ -80,7 +80,7 @@ func NewIndexedName(labelName, indexVar, validateVar, tagName string) Name {
 		structVar:     "",
 		fieldName:     validateVar,
 		labelName:     fmt.Sprintf("fmt.Sprintf(\"%s.%%v\", %v)", labelName, indexVar),
-		tagName: tagName,
+		tagName:       tagName,
 	}
 }
 func NewSimpleNameWithAliasType(fieldName, aliasType string) Name {
