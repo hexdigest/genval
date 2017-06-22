@@ -64,15 +64,7 @@ func (r User) Validate() error {
 		errs.AddFieldf("Age", "more than 95")
 	}
 	if err := r.Dog.Validate(); err != nil {
-
-		switch e := err.(type) {
-		case errlist.List:
-			for _, childErr := range e {
-				errs.AddField("Dog"+"."+childErr.Field, childErr.Err)
-			}
-		case error:
-			errs.AddField("Dog", err)
-		}
+		errs.AddField("Dog", err)
 	}
 	if len(r.Emails) < 1 {
 		errs.AddFieldf("Emails", "less items than 1")
@@ -91,15 +83,7 @@ func (r User) Validate() error {
 		errs.AddFieldf("Title", "cannot be nil")
 	} else {
 		if err := r.Title.Validate(); err != nil {
-
-			switch e := err.(type) {
-			case errlist.List:
-				for _, childErr := range e {
-					errs.AddField("Title"+"."+childErr.Field, childErr.Err)
-				}
-			case error:
-				errs.AddField("Title", err)
-			}
+			errs.AddField("Title", err)
 		}
 	}
 	return errs.ErrorOrNil()

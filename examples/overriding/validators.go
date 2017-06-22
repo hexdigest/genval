@@ -83,15 +83,7 @@ func (r Age5) Validate() error {
 func (r Request2) Validate() error {
 	var errs errlist.List
 	if err := r.Age.ValidateMin10(); err != nil {
-
-		switch e := err.(type) {
-		case errlist.List:
-			for _, childErr := range e {
-				errs.AddField("Age"+"."+childErr.Field, childErr.Err)
-			}
-		case error:
-			errs.AddField("Age", err)
-		}
+		errs.AddField("Age", err)
 	}
 	if r.Some < 3 {
 		errs.AddFieldf("Some", "less than 3")
@@ -106,15 +98,7 @@ func (r Request2) Validate() error {
 func (r Request3) Validate() error {
 	var errs errlist.List
 	if err := validateMin10(r.Age); err != nil {
-
-		switch e := err.(type) {
-		case errlist.List:
-			for _, childErr := range e {
-				errs.AddField("Age"+"."+childErr.Field, childErr.Err)
-			}
-		case error:
-			errs.AddField("Age", err)
-		}
+		errs.AddField("Age", err)
 	}
 	if r.Some < 3 {
 		errs.AddFieldf("Some", "less than 3")
@@ -129,26 +113,10 @@ func (r Request3) Validate() error {
 func (r Request4) Validate() error {
 	var errs errlist.List
 	if err := r.Age.ValidateMin10(); err != nil {
-
-		switch e := err.(type) {
-		case errlist.List:
-			for _, childErr := range e {
-				errs.AddField("Age"+"."+childErr.Field, childErr.Err)
-			}
-		case error:
-			errs.AddField("Age", err)
-		}
+		errs.AddField("Age", err)
 	}
 	if err := validateMax128(r.Age); err != nil {
-
-		switch e := err.(type) {
-		case errlist.List:
-			for _, childErr := range e {
-				errs.AddField("Age"+"."+childErr.Field, childErr.Err)
-			}
-		case error:
-			errs.AddField("Age", err)
-		}
+		errs.AddField("Age", err)
 	}
 	if r.Some < 3 {
 		errs.AddFieldf("Some", "less than 3")
@@ -163,15 +131,7 @@ func (r Request4) Validate() error {
 func (r Request5) Validate() error {
 	var errs errlist.List
 	if err := r.Age.Validate(); err != nil {
-
-		switch e := err.(type) {
-		case errlist.List:
-			for _, childErr := range e {
-				errs.AddField("Age"+"."+childErr.Field, childErr.Err)
-			}
-		case error:
-			errs.AddField("Age", err)
-		}
+		errs.AddField("Age", err)
 	}
 	if r.Some < 3 {
 		errs.AddFieldf("Some", "less than 3")
