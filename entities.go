@@ -64,7 +64,7 @@ func (s StructDef) Generate(w io.Writer, cfg types.GenConfig) {
 
 				for _, field := range s.fields {
 					field.fieldType.Generate(
-						w, cfg, types.NewName("", varName+".", field.fieldNames.Get(tag), field.fieldNames[""]))
+						w, cfg, types.NewName("", varName+".", field.fieldNames.Get(tag), field.fieldNames[""], tag))
 				}
 			}
 

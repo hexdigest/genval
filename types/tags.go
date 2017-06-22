@@ -68,7 +68,12 @@ func ParseTags(astTag *ast.BasicLit, logCtx string) ([]Tag, NameTags) { //exampl
 				log.Fatalf("tag validate is misspelled for %s: %s", logCtx, tagName)
 			}
 		}
-		nameTags[tagName] = removeQuotes(strings.TrimSpace(v[1]))
+		tagValues := strings.Split(strings.TrimSpace(v[1]), ",")
+		if len(tagValues) == 1 {
+			nameTags[tagName] = removeQuotes(tagValues[0])
+		} else {
+			nameTags[tagName] = tagValues[0][1:len(tagValues[0])]
+		}
 	}
 	return validateTags, nameTags
 }

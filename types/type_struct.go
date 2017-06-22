@@ -65,11 +65,11 @@ func (t typeStruct) Generate(w io.Writer, cfg GenConfig, name Name) {
 			}
 		}
 	case !cfg.NeedValidatableCheck, !t.external:
-		fmt.Fprintf(w, "if err := %s.Validate(); err != nil {\n", name.WithAlias())
+		fmt.Fprintf(w, "if err := %s.Validate%s(); err != nil {\n", name.WithAlias(), name.tagName)
 		fmt.Fprintf(w, registerError, name.LabelName())
 		fmt.Fprintf(w, "}\n")
 	default:
-		fmt.Fprintf(w, "if err := validate(%s); err != nil {\n", name.WithAlias())
+		fmt.Fprintf(w, "if err := validate%s(%s); err != nil {\n", name.tagName, name.WithAlias())
 		fmt.Fprintf(w, registerError, name.LabelName())
 		fmt.Fprintf(w, "}\n")
 	}
