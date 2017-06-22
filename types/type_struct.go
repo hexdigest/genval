@@ -36,16 +36,8 @@ func (t *typeStruct) SetValidateTag(tag Tag) error {
 }
 
 func (t typeStruct) Generate(w io.Writer, cfg GenConfig, name Name) {
-	registerError := `
-				switch e := err.(type) {
-				case errlist.List:
-				  for _, childErr := range e {
-				    errs.AddField(%[1]s + "." + childErr.Field, childErr.Err)
-				  }
-				case error:
-				  errs.AddField(%[1]s, err)
-				}
-				`
+	registerError := `errs.AddField(%s, err)`
+
 	if !cfg.SeveralErrors {
 		cfg.AddImport("fmt")
 		registerError = "	return fmt.Errorf(\"%%s %%v\", %s, err)\n"
