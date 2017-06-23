@@ -22,7 +22,7 @@ func (t typeMap) Type() string {
 	return Map
 }
 
-func (t *typeMap) SetValidateTag(tag Tag) error {
+func (t *typeMap) SetValidateTag(tag ValidatableTag) error {
 	switch tag.Key() {
 	case MapMinItemsKey:
 		st := tag.(SimpleTag)

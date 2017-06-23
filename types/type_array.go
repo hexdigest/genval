@@ -21,7 +21,7 @@ func (t typeArray) Type() string {
 	return Array
 }
 
-func (t *typeArray) SetValidateTag(tag Tag) error {
+func (t *typeArray) SetValidateTag(tag ValidatableTag) error {
 	switch tag.Key() {
 	case ArrayMinItemsKey:
 		st := tag.(SimpleTag)

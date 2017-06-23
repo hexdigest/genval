@@ -21,7 +21,7 @@ func (t typePointer) Type() string {
 	return t.innerType.Type()
 }
 
-func (t *typePointer) SetValidateTag(tag Tag) error {
+func (t *typePointer) SetValidateTag(tag ValidatableTag) error {
 	switch tag.Key() {
 	case PointerNullableKey:
 		t.nullable = true

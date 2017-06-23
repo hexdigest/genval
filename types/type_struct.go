@@ -23,7 +23,7 @@ func (t typeStruct) Type() string {
 	return t.typeName
 }
 
-func (t *typeStruct) SetValidateTag(tag Tag) error {
+func (t *typeStruct) SetValidateTag(tag ValidatableTag) error {
 	switch tag.Key() {
 	case StructFuncKey:
 		for _, v := range parseFuncsParam(tag.(SimpleTag).Param) {

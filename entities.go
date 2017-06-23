@@ -64,7 +64,12 @@ func (s StructDef) Generate(w io.Writer, cfg types.GenConfig) {
 
 				for _, field := range s.fields {
 					field.fieldType.Generate(
-						w, cfg, types.NewName("", varName+".", field.fieldNames.Get(tag), field.fieldNames[""], tag))
+						w, cfg, types.NewName(
+							"",
+							varName+".",
+							field.fieldNames.Get(tag),
+							field.fieldNames.GetFromStructDefinition(),
+							tag))
 				}
 			}
 
@@ -100,18 +105,20 @@ func (s StructDef) generateEnumValidator(w io.Writer, cfg types.GenConfig, varNa
 }
 
 type FieldDef struct {
-	fieldNames types.NameTags
+	fieldNames types.FieldTagsNames
 	fieldType  types.TypeDef
 }
 
-func NewField(fieldNames types.NameTags, fieldType types.TypeDef, validateTags []types.Tag) (*FieldDef, error) {
+func NewField(fieldNames types.FieldTagsNames, fieldType types.TypeDef, validateTags []types.ValidatableTag) (*FieldDef, error) {
 	for _, t := range validateTags {
 		if err := fieldType.SetValidateTag(t); err != nil {
-			return nil, fmt.Errorf("set validateTags failed, field %s, tag: %+v, err: %s", fieldNames[""], t, err)
+			return nil, fmt.Errorf("set validateTags failed, field %s, tag: %+v, err: %s",
+				fieldNames.GetFromStructDefinition(), t, err)
 		}
 	}
 	if err := fieldType.Validate(); err != nil {
-		return nil, fmt.Errorf("validateTags validation failed for field %s, err: %s", fieldNames[""], err)
+		return nil, fmt.Errorf("validateTags validation failed for field %s, err: %s",
+			fieldNames.GetFromStructDefinition(), err)
 	}
 	return &FieldDef{
 		fieldNames: fieldNames,

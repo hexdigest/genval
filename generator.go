@@ -62,13 +62,12 @@ func (g generator) Generate(validatorsCfg config, needCheck bool) error {
 func (g generator) gen(pkg string, cfg types.GenConfig) (*bytes.Buffer, error) {
 	codeBuf := bytes.NewBuffer([]byte{})
 	importsBuf := bytes.NewBuffer([]byte{})
-	utilCodeBuf := bytes.NewBuffer([]byte{})
 
-	g.genUtilCode(utilCodeBuf, cfg)
+	g.genUtilCode(codeBuf, cfg)
 	g.genCode(codeBuf, cfg)
 	g.genImports(importsBuf, pkg)
 
-	io.WriteString(importsBuf, utilCodeBuf.String()+codeBuf.String())
+	io.WriteString(importsBuf, codeBuf.String())
 	return importsBuf, nil
 }
 

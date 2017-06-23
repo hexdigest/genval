@@ -10,7 +10,7 @@ import (
 
 type TypeDef interface {
 	Type() string
-	SetValidateTag(Tag) error
+	SetValidateTag(ValidatableTag) error
 	Validate() error
 	Generate(w io.Writer, cfg GenConfig, name Name)
 }
@@ -29,7 +29,6 @@ type Name struct {
 	pointerPrefix string
 	structVar     string
 	fieldName     string
-	originalName  string
 	labelName     string
 	tagName       string
 }
