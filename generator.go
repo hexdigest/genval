@@ -90,18 +90,31 @@ func (a AlpabetSorter) Less(i, j int) bool { return a[i].Name < a[j].Name }
 func (g generator) genUtilCode(w io.Writer, cfg types.GenConfig) {
 	const t = `
 	{{if .NeedValidatableCheck}}
-		{{range $tag := .SupportedTags}}
+	{{range $tag := .SupportedTags}}
 		type validatable{{$tag}} interface {
             Validate{{$tag}}() error
         }
 
+        {{ if eq $tag ""}}
+		func validate(i interface{}) error {
+			if v, ok := i.(validatable); ok {
+				return v.Validate()
+			}
+			return nil
+		}
+		{{else}}
         func validate{{$tag}}(i interface{}) error {
 			if v, ok := i.(validatable{{$tag}}); ok {
 				return v.Validate{{$tag}}()
+			} else {
+				if v, ok := i.(validatable); ok {
+					return v.Validate()
+				}
 			}
 			return nil
 		}
 		{{end}}
+	{{end}}
 	{{end}}
 	`
 	writeTmpl(t, "utilCode", w, cfg)
